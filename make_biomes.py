@@ -15,7 +15,14 @@ import shutil
 
 end_year = 2024
 
-outputdir = '/Volumes/FATDATABABY/'
+
+cwd = False
+if cwd:
+    # External drive or other directory
+    outputdir = '/Volumes/FATDATABABY/'
+else:
+    # current working directory
+    outputdir = ''
 
 overwrite_data = True
 download_data = True
