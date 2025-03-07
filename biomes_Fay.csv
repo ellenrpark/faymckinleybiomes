@@ -1,0 +1,18 @@
+﻿BIOME_NUM,BIOME_ABREV,BIOME_FULL
+1,NP ICE,North Pacific Ice
+2,NP SPSS ,North Pacific Subpolar Seasonally Stratified
+3,NP STSS,North Pacific Subtropical Seasonally Stratified
+4,NP STPS,North Pacific Subtropical Permanently Stratified
+5,Pac EQU W,Equatorial Pacific West
+6,Pac EQU E,Equatorial Pacific East
+7,SP STPS,South Pacific Subtropical Permanently Stratified
+8,NA ICE,North Atlantic Ice
+9,NA SPSS,North Atlantic Subpolar Seasonally Stratified
+10,NA STSS,North Atlantic Subtropical Seasonally Stratified
+11,NA STPS,North Altantic Subptropical Permanently Stratified
+12,Atl EQU,Equatorial Atlantic
+13,SA STPS,South Atlantic Subtropical Permanently Stratified
+14,IND STPS,Indian Subtropical Permanently Stratified
+15,SO STSS,Southern Ocean Suptropical Seasonally Stratified
+16,SO SPSS,Southern Ocean Subpolar Seasonally Stratified
+17,SO ICE,Southern Ocean Ice

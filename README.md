@@ -3,14 +3,18 @@
 GitHub repository to recreate the Fay and McKinley biomes from 2010-2024 (modified from Fay and McKinley, 2014; original biomes can be downloaded [here](https://doi.pangaea.de/10.1594/PANGAEA.828650)).
 
 ## Makig biomes
-Run make_biomes.py to download and recreate these biomes.
+1. Specify output directory in set_paths.py
+2. Run make_biomes.py to download and recreate these biomes. Check download_data and overwrite_data flags.
+3. Run compare_results.py to compare results using these methods to original biomes for 2010
 
 **Notes:**
-- User needs to specify output directory to download and store data files. If not, data will be downloaded in current working directory.
+- User needs to specify output directory to download and store data files in set_paths.py. If not, data will be downloaded in current working directory in /faymckinleybiomes/data/.
 - Code creates directory /faymckinleybiomes/ where all data are downloaded. Below is the directory structure
 ```
 ├── faymckinleybiomes
+|   set_paths.py
 |   make_biomes.py
+|   compare_results.py
 |   ├── faymckinleybiomes
 │     ├── data
 │     ├── figures

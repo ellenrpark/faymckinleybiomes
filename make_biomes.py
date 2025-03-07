@@ -11,22 +11,15 @@ from reformatdata_fxns import ReformatData
 from makebiome_fxns import CalculateBiomes
 import os
 import shutil
-# Set up directory for data downlaod and output
+from set_paths import outputdir
+
 
 end_year = 2024
 
+overwrite_data = False
+download_data = False
 
-cwd = False
-if cwd:
-    # External drive or other directory
-    outputdir = '/Volumes/FATDATABABY/'
-else:
-    # current working directory
-    outputdir = ''
-
-overwrite_data = True
-download_data = True
-
+# Set up directory for data downlaod and output
 # Create dir to download data and output final file
 if os.path.exists(outputdir+'faymckinleybiomes/') == False:
     

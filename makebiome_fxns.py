@@ -16,6 +16,8 @@ import scipy.ndimage
 import matplotlib.colors as mcolors
 import numpy as np
 import os
+from matplotlib import gridspec
+import matplotlib.ticker as mticker
 
 def GetBiomeColorMap():
     north_pac_color = plt.cm.Blues_r(np.linspace(0, 0.6, 4))
@@ -57,6 +59,9 @@ def CalculateBiomes(savedir, end_year, ice_data, sst_data, mld_data, chl_data):
     # Load original Fay and McKinley biomes to define marginal seas
     # and coastal areas
     fm_biomes = xr.open_dataset('Fay_McKinley_Time_Varying_Biomes.nc')
+    
+    # Load biome names
+    bnames = pd.read_csv('biomes_Fay.csv')
     
     # Get colormap 
     cmm = GetBiomeColorMap()
@@ -268,48 +273,94 @@ def CalculateBiomes(savedir, end_year, ice_data, sst_data, mld_data, chl_data):
         bad_inds = np.where(np.isnan(np.flipud(fm_biomes.MeanBiomes.values.T))==True)
         biomes_all[i,bad_inds[0],bad_inds[1]]=np.NaN
         
-        fig = plt.figure(figsize=(10,6))
-        rr = 2; cc = 4
+        # fig = plt.figure(figsize=(10,6))
+        # rr = 2; cc = 4
         
-        param_list = [sea_ice_frac, sst, mld, chl]
-        name_list = ['Sea Ice','SST','MLD', 'CHL']
-        for ri in np.arange(cc):
+        # param_list = [sea_ice_frac, sst, mld, chl]
+        # name_list = ['Sea Ice','SST','MLD', 'CHL']
+        # for ri in np.arange(cc):
             
-            ax = fig.add_subplot(rr,cc,int(ri+1))
-            ax.pcolormesh(lon, lat, param_list[ri])
-            ax.set_title(name_list[ri])
+        #     ax = fig.add_subplot(rr,cc,int(ri+1))
+        #     ax.pcolormesh(lon, lat, param_list[ri])
+        #     ax.set_title(name_list[ri])
             
+        # param_list = [unedited, gapfilled, smoothed, biomes_all[i,:,:]]
+        # name_list = ['Initial','Gap-Filled','Smoothed', 'Final']
+        # for ri in np.arange(cc):
+            
+        #     ax = fig.add_subplot(rr,cc,int(cc+ri+1))
+        #     ax.pcolormesh(lon, lat, param_list[ri], cmap = cmm)
+        #     ax.set_title(name_list[ri])
+            
+        # fig.tight_layout()
+        # if i == biomes_all.shape[0]-1:
+        #     fig.suptitle('Mean Conditions 2010-'+str(int(end_year)))
+        #     plt.savefig(figdir+'Mean.jpg', dpi = 300)
+        # else:
+        #     fig.suptitle(str(yr_range[i]))
+        #     plt.savefig(figdir+str(yr_range[i])+'.jpg', dpi = 300)
+        
+        # plt.close()
+        
+        # plt.figure(figsize = (6.5, 4))
+        # plt.pcolormesh(lon, lat, biomes_all[i,:,:], cmap = cmm)
+        # plt.colorbar()
+        
+        # if i == biomes_all.shape[0]-1:
+        #     plt.title('Mean Conditions 2010-'+str(int(end_year)))
+        #     fig.tight_layout()
+        #     plt.savefig(figdir+'Mean.jpg', dpi = 300)
+
+        # else:
+        #     plt.title(str(yr_range[i]))
+        #     fig.tight_layout()
+        #     plt.savefig(figdir+str(yr_range[i])+'.jpg',dpi = 300)
+        # plt.close()
+        
+        
+        if i == biomes_all.shape[0]-1:
+            title_str = 'Mean Conditions 2010-'+str(int(end_year))
+        else:
+            title_str =str(yr_range[i])
+            
+        fig = plt.figure(figsize = (6.5, 8))
+        gs = gridspec.GridSpec(2, 3, figure=fig, 
+                               height_ratios=[4, 1], 
+                               width_ratios=[1,1,1])
+        
+        axmap = fig.add_subplot(gs[0,:])
+        ax1 = fig.add_subplot(gs[1,0])
+        ax2 = fig.add_subplot(gs[1,1])
+        ax3 = fig.add_subplot(gs[1,2])
+        
         param_list = [unedited, gapfilled, smoothed, biomes_all[i,:,:]]
-        name_list = ['Initial','Gap-Filled','Smoothed', 'Final']
-        for ri in np.arange(cc):
+        name_list = ['Initial','Gap-Filled','Smoothed', 'Final\n'+title_str]
+        ax_list = [ax1, ax2,ax3, axmap]
+        for ri,ax in enumerate(ax_list):
             
-            ax = fig.add_subplot(rr,cc,int(cc+ri+1))
-            ax.pcolormesh(lon, lat, param_list[ri], cmap = cmm)
+            cax = ax.pcolormesh(lon, lat, param_list[ri], cmap = cmm)
             ax.set_title(name_list[ri])
+            
+            if ri == 0 or ri == 3:
+                ax.set_ylabel('Longitude (ºN)')
+                
+            if ri == 3:
+                cbar = fig.colorbar(cax,ax = ax,
+                                    ticks=bnames.loc[:,'BIOME_NUM'].values,
+                                    format=mticker.FixedFormatter(bnames.loc[:,'BIOME_ABREV'].values),
+                                    location = 'bottom', alpha = 1)
+                cbar.ax.tick_params(rotation=90)
+                cbar.draw_all()
+            
+            ax.set_xlabel('Latitude (ºE)')
+            
             
         fig.tight_layout()
         if i == biomes_all.shape[0]-1:
-            fig.suptitle('Mean Conditions 2010-'+str(int(end_year)))
             plt.savefig(figdir+'Mean.jpg', dpi = 300)
         else:
-            fig.suptitle(str(yr_range[i]))
             plt.savefig(figdir+str(yr_range[i])+'.jpg', dpi = 300)
         
-        plt.close()
-        
-        plt.figure(figsize = (6.5, 4))
-        plt.pcolormesh(lon, lat, biomes_all[i,:,:], cmap = cmm)
-        plt.colorbar()
-        
-        if i == biomes_all.shape[0]-1:
-            plt.title('Mean Conditions 2010-'+str(int(end_year)))
-            fig.tight_layout()
-            plt.savefig('figures/Mean.jpg', dpi = 300)
-
-        else:
-            plt.title(str(yr_range[i]))
-            fig.tight_layout()
-            plt.savefig('figures/'+str(yr_range[i])+'.jpg',dpi = 300)
         plt.close()
         
         # sval = 200
