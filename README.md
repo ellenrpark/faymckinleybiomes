@@ -7,11 +7,13 @@ Run make_biomes.py to download and recreate these biomes.
 
 **Notes:**
 - User needs to specify output directory to download and store data files. If not, data will be downloaded in current working directory.
-- Code creates directory /faymckinleybiomes/ where all data are downloaded. Below is the directory structure 
-+-- faymckinleybiomes
-|   +-- data
-|   +-- figures
-|   +-- biomes_2010_<endyear>.nc
+- Code creates directory /faymckinleybiomes/ where all data are downloaded. Below is the directory structure
+
+├── faymckinleybiomes
+│   ├── data
+│   ├── figures
+│   ├── biomes_2010_<endyear>.nc
+
 
 ## Data sets
 This workflow downloads and uses the following data from the following sources:
