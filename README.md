@@ -8,13 +8,14 @@ Run make_biomes.py to download and recreate these biomes.
 **Notes:**
 - User needs to specify output directory to download and store data files. If not, data will be downloaded in current working directory.
 - Code creates directory /faymckinleybiomes/ where all data are downloaded. Below is the directory structure
-
+```
 ├── faymckinleybiomes
-│   ├── data
-│   ├── figures
-│   ├── biomes_2010_<endyear>.nc
-
-
+|   make_biomes.py
+|   ├── faymckinleybiomes
+│     ├── data
+│     ├── figures
+│     ├── biomes_2010_<endyear>.nc
+```
 ## Data sets
 This workflow downloads and uses the following data from the following sources:
 - Monthly 1ºx1º sea surface temperature (SST) and sea ice fraction from HadISST ([download here](https://www.metoffice.gov.uk/hadobs/hadisst/data/download.html]), (Rayner et al., 2003)).
