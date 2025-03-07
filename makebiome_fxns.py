@@ -151,12 +151,12 @@ def CalculateBiomes(savedir, end_year, ice_data, sst_data, mld_data, chl_data):
         # # North Pacific STPS
         nh_stps_pac=np.where((sst>=14) & (sst<29) & \
                               (chl<0.16) & (mld<=125) & \
-                                  (((lon<=-83.8) | (lon>103)) & ((lat>0) & (lat<15))) | \
-                                      (((lon<=-100) | (lon>103)) & ((lat>15) & (lat<90))) &\
+                                  ((((lon<=-83.8) | (lon>103)) & ((lat>0) & (lat<15))) | \
+                                      (((lon<=-100) | (lon>103)) & ((lat>15) & (lat<90)))) & \
                                   (np.isnan(biomes_all[i,:,:])==True))
             
-        inds = np.where((((lon<=-83.8) | (lon>103)) & ((lat>0) & (lat<15))) | \
-                         (((lon<=-90) | (lon>103)) & ((lat>15) & (lat<90))))
+        # inds = np.where((((lon<=-83.8) | (lon>103)) & ((lat>0) & (lat<15))) | \
+        #                  (((lon<=-90) | (lon>103)) & ((lat>15) & (lat<90))))
         biomes_all[i, nh_stps_pac[0],nh_stps_pac[1]] = 4
         
         # # North Atlantic STPS
@@ -323,38 +323,50 @@ def CalculateBiomes(savedir, end_year, ice_data, sst_data, mld_data, chl_data):
         else:
             title_str =str(yr_range[i])
             
-        fig = plt.figure(figsize = (6.5, 8))
-        gs = gridspec.GridSpec(2, 3, figure=fig, 
-                               height_ratios=[4, 1], 
-                               width_ratios=[1,1,1])
+        # fig = plt.figure(figsize = (5, 7))
+        # gs = gridspec.GridSpec(2, 3, figure=fig, 
+        #                        height_ratios=[5, 2], 
+        #                        width_ratios=[1,1,1])
         
-        axmap = fig.add_subplot(gs[0,:])
-        ax1 = fig.add_subplot(gs[1,0])
-        ax2 = fig.add_subplot(gs[1,1])
-        ax3 = fig.add_subplot(gs[1,2])
+        # axmap = fig.add_subplot(gs[0,:])
+        # ax1 = fig.add_subplot(gs[1,0])
+        # ax2 = fig.add_subplot(gs[1,1])
+        # ax3 = fig.add_subplot(gs[1,2])
+        
+        fig = plt.figure(figsize = (12, 4))
+        gs = gridspec.GridSpec(1, 4, figure=fig, 
+                               width_ratios=[4,4,4,5])
+
+        ax1 = fig.add_subplot(gs[0,0])
+        ax2 = fig.add_subplot(gs[0,1])
+        ax3 = fig.add_subplot(gs[0,2])
+        axmap = fig.add_subplot(gs[0,3])
         
         param_list = [unedited, gapfilled, smoothed, biomes_all[i,:,:]]
-        name_list = ['Initial','Gap-Filled','Smoothed', 'Final\n'+title_str]
+        name_list = ['Initial','Gap-Filled','Smoothed', 'Final']
         ax_list = [ax1, ax2,ax3, axmap]
         for ri,ax in enumerate(ax_list):
             
             cax = ax.pcolormesh(lon, lat, param_list[ri], cmap = cmm)
             ax.set_title(name_list[ri])
             
-            if ri == 0 or ri == 3:
+            if ri == 0:
                 ax.set_ylabel('Longitude (ºN)')
+            else:
+                ax.set_yticklabels([])
                 
             if ri == 3:
                 cbar = fig.colorbar(cax,ax = ax,
                                     ticks=bnames.loc[:,'BIOME_NUM'].values,
                                     format=mticker.FixedFormatter(bnames.loc[:,'BIOME_ABREV'].values),
-                                    location = 'bottom', alpha = 1)
-                cbar.ax.tick_params(rotation=90)
+                                    location = 'right', alpha = 1)
+                cbar.ax.tick_params(labelsize=10)
                 cbar.draw_all()
             
             ax.set_xlabel('Latitude (ºE)')
             
             
+        fig.suptitle(title_str)
         fig.tight_layout()
         if i == biomes_all.shape[0]-1:
             plt.savefig(figdir+'Mean.jpg', dpi = 300)
